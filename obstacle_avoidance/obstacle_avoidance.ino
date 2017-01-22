@@ -79,12 +79,12 @@ void loop() {
 
 		//turning
 		if( _distance<40 ){
-			for(int i=0;i<8;i++){
+			for(int i=0;i<10;i++){
 				Serial.println("   turning...");
 				drive("right",-255);
 				delay(400);stop_car();delay(400);
 				drive("left",255);
-				delay(440);stop_car();delay(440);
+				delay(420);stop_car();delay(420);
 				if(digitalRead(leftHit)==1){read_hit=0;break;}
 			}
 			_distance=0;prev_distance=0;mistakes=0;

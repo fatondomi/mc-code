@@ -1,3 +1,4 @@
+
 //pins
 byte trigPin=13,
 	   echoPin=12,
@@ -79,7 +80,7 @@ void loop() {
 
 		//turning
 		if( _distance<40 ){
-			for(int i=0;i<8;i++){
+			for(int i=0;i<7;i++){
 				Serial.println("   turning...");
 				drive("right",-255);
 				delay(400);stop_car();delay(400);

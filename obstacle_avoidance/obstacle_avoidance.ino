@@ -79,7 +79,7 @@ void loop() {
 		prev_distance=_distance;
 
 		//turning
-		if( _distance<40 ){
+		if( _distance<45 ){
 			for(int i=0;i<7;i++){
 				Serial.println("   turning...");
 				drive("right",-255);

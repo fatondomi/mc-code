@@ -28,6 +28,13 @@ void setup() {
 	// put your setup code here, to run once:
 	Serial.begin(9600);
 
+  //IR sesor
+  pinMode(A0,INPUT);
+  pinMode(A1,OUTPUT);
+  pinMode(A2,OUTPUT);
+  digitalWrite(A2,HIGH);//vcc
+  digitalWrite(A1,LOW);//gnd
+
 	//direction
 	pinMode(mod1,OUTPUT); //h-bridge//direction motor//power
 	pinMode(left,OUTPUT); //h-bridge//direction motor//left turn
@@ -38,7 +45,7 @@ void setup() {
 	pinMode(backward,OUTPUT); //h-bridge//drive motor//backward drive
 	pinMode(forward,OUTPUT); //h-bridge//drive motor//forward drive
 
-	//distance
+	//ultrasonic sensor
 	pinMode(trigPin, OUTPUT); //ultra-sonic sensor//turn on waves
 	pinMode(echoPin, INPUT); //ultra-sonic sensor//get distance
 
@@ -62,7 +69,7 @@ void loop() {
 		digitalWrite(trigPin, LOW);
 		_distance=pulseIn(echoPin, HIGH)/58.2;
 
-		//correcting for mistakes
+		//correcting mistakes
 		if (_distance > prev_distance && prev_distance != 0) {
 			if (mistakes > 10) {
 				mistakes = 0;
@@ -70,8 +77,12 @@ void loop() {
 			}
 			else{_distance = prev_distance; mistakes++;}
 		} 
-    
-    speed_holder=speed_ad()+((time_run/60000)*1.3);
+
+    //correcting mistakes by IR sensor
+    if(digitalRead(A0)==0){_distance=10;//Sensor acivates inside a 10 cm range//It passes one if not activated
+    }
+
+    speed_holder=speed_ad()+((time_run/60000)*1.3);//speed holder is there so we dont compute speed_ad() twice for the Serial print and for driving function
 		Serial.print("   d = "); Serial.print(_distance);Serial.print("   speed = ");Serial.println(speed_holder);
 
 		//driving
@@ -80,6 +91,7 @@ void loop() {
 
 		//turning
 		if( _distance<45 ){
+		  if(_distance==10){drive("straight",-255);delay(300);stop_car();}
 			for(int i=0;i<7;i++){
 				Serial.println("   turning...");
 				drive("right",-255);
